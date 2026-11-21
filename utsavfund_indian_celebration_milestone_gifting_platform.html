@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UtsavFund — Self-Serve Indian Celebration & Milestone Registry</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: '#FAF8F5',
+            ivoryWarm: '#F3EFE8',
+            maroon: {
+              DEFAULT: '#7A1C24',
+              dark: '#591218',
+              light: '#9B2630',
+              soft: '#F9ECEE'
+            },
+            gold: {
+              DEFAULT: '#C59B27',
+              dark: '#9E7918',
+              light: '#F3E5AB',
+              soft: '#FBF7E9'
+            },
+            emeraldProgress: '#15803D',
+            charcoal: '#1F1B1C'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF8F5;
+      color: #1F1B1C;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .bg-utsav-pattern {
+      background-image:
+        radial-gradient(rgba(197, 155, 39, 0.14) 1px, transparent 1px),
+        radial-gradient(rgba(122, 28, 36, 0.05) 1px, #FAF8F5 1px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    .card-royal {
+      border: 1px solid rgba(197, 155, 39, 0.4);
+      box-shadow: 0 12px 32px -12px rgba(122, 28, 36, 0.09);
+    }
+
+    .progress-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
+      animation: shimmerMove 2.5s infinite;
+    }
+    @keyframes shimmerMove {
+      100% { left: 160%; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #FAF8F5; }
+    ::-webkit-scrollbar-thumb { background: #C59B27; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #7A1C24; }
+  </style>
+</head>
+<body class="bg-utsav-pattern min-h-screen flex flex-col selection:bg-maroon selection:text-white">
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-gold/35">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand -->
+      <button onclick="switchTab('explore')" class="flex items-center gap-3 text-left group">
+        <div class="w-10 h-10 rounded-2xl bg-maroon flex items-center justify-center text-gold border border-gold shadow-sm group-hover:scale-105 transition">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3C12 3 9.5 6 9.5 8.5C9.5 9.88 10.62 11 12 11C13.38 11 14.5 9.88 14.5 8.5C14.5 6 12 3 12 3Z" fill="#C59B27" fill-opacity="0.4"/>
+            <path d="M4 13C4 17.4183 7.58172 20 12 20C16.4183 20 20 17.4183 20 13H4Z" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 20L7 22M16 20L17 22" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-serif text-2xl font-bold tracking-tight text-maroon block leading-none">UtsavFund</span>
+          <span class="text-[10px] uppercase tracking-[0.22em] text-gold-dark font-bold">Zero-Fee Milestone Registry</span>
+        </div>
+      </button>
+
+      <!-- Navigation Mode Pills -->
+      <nav class="flex flex-wrap items-center gap-1.5 bg-ivoryWarm p-1 rounded-2xl border border-gold/40 shadow-inner">
+        <button onclick="switchTab('explore')" id="nav-explore" class="nav-pill px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-maroon text-white shadow-sm">
+          Explore
+        </button>
+        <button onclick="switchTab('guest')" id="nav-guest" class="nav-pill px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-charcoal/80 hover:text-maroon">
+          Live Guest Page
+        </button>
+        <button onclick="switchTab('builder')" id="nav-builder" class="nav-pill px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-charcoal/80 hover:text-maroon">
+          Host Builder
+        </button>
+        <button onclick="switchTab('ledger')" id="nav-ledger" class="nav-pill px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-charcoal/80 hover:text-maroon">
+          Shagun Ledger
+        </button>
+      </nav>
+
+      <!-- Active Event Indicator -->
+      <div class="hidden xl:flex items-center gap-2 text-xs bg-white px-3 py-1.5 rounded-full border border-gold/40">
+        <span class="w-2 h-2 rounded-full bg-emeraldProgress animate-pulse"></span>
+        <span class="text-charcoal/70">Active Page:</span>
+        <strong id="header-active-event" class="text-maroon font-bold truncate max-w-[160px]">Aarav &amp; Meera</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow">
+
+    <!-- ==================== TAB 1: LANDING / EXPLORE ==================== -->
+    <section id="tab-explore" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <!-- Hero Banner -->
+      <div class="bg-white/95 rounded-3xl card-royal p-7 sm:p-12 text-center relative overflow-hidden mb-14">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-soft border border-gold/40 text-xs font-bold text-maroon uppercase tracking-wider mb-5">
+          <span>✨ 100% Free Self-Serve Platform</span>
+          <span>•</span>
+          <span>Direct UPI (0% Fee)</span>
+        </div>
+
+        <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-maroon tracking-tight max-w-4xl mx-auto leading-tight mb-5">
+          Turn Wedding &amp; Celebration Gifts Into <span class="italic text-gold-dark">Real Future Milestones</span>
+        </h1>
+
+        <p class="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-charcoal/80 leading-relaxed mb-8">
+          Instead of 15 duplicate dinner sets, let family and friends fund your first home down payment, honeymoon flights, or baby's future—directly to your UPI ID in 60 seconds.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <button onclick="startNewCelebration()" class="px-7 py-3.5 rounded-2xl bg-maroon hover:bg-maroon-dark text-white font-bold text-sm sm:text-base shadow-lg shadow-maroon/20 transition flex items-center gap-2">
+            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Create Your Free Page in 60s
+          </button>
+          <button onclick="switchTab('guest')" class="px-6 py-3.5 rounded-2xl bg-gold-soft hover:bg-gold/25 text-maroon border border-gold font-bold text-sm sm:text-base transition">
+            Preview Live Guest Experience →
+          </button>
+        </div>
+
+        <!-- 3-Step How It Works -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-10 border-t border-gold/30 text-left">
+          <div class="bg-ivory/80 rounded-2xl p-5 border border-gold/30">
+            <div class="w-9 h-9 rounded-xl bg-maroon text-gold font-serif font-bold text-lg flex items-center justify-center mb-3">1</div>
+            <h3 class="font-serif text-xl font-bold text-maroon mb-1">Add Goals &amp; Your UPI ID</h3>
+            <p class="text-xs sm:text-sm text-charcoal/75 leading-relaxed">Pick your occasion (Wedding, Griha Pravesh, Baby Shower), add milestones, and link your personal UPI ID.</p>
+          </div>
+          <div class="bg-ivory/80 rounded-2xl p-5 border border-gold/30">
+            <div class="w-9 h-9 rounded-xl bg-maroon text-gold font-serif font-bold text-lg flex items-center justify-center mb-3">2</div>
+            <h3 class="font-serif text-xl font-bold text-maroon mb-1">Share One WhatsApp Link</h3>
+            <p class="text-xs sm:text-sm text-charcoal/75 leading-relaxed">Guests don't need any app or login. They tap an auspicious Shagun amount, scan your UPI QR, and leave a blessing.</p>
+          </div>
+          <div class="bg-ivory/80 rounded-2xl p-5 border border-gold/30">
+            <div class="w-9 h-9 rounded-xl bg-maroon text-gold font-serif font-bold text-lg flex items-center justify-center mb-3">3</div>
+            <h3 class="font-serif text-xl font-bold text-maroon mb-1">0% Fees &amp; Auto Shagun Book</h3>
+            <p class="text-xs sm:text-sm text-charcoal/75 leading-relaxed">Money lands straight in your bank account while UtsavFund tracks every guest's blessing for easy thank-yous.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Community / Sample Celebration Pages -->
+      <div>
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-gold-dark">Explore Live Registries</span>
+            <h2 class="font-serif text-3xl font-bold text-maroon mt-0.5">Sample Celebrations Across India</h2>
+          </div>
+          <p class="text-xs sm:text-sm text-charcoal/70">Click any celebration below to open its Live Guest Page or edit it in Host Builder.</p>
+        </div>
+
+        <div id="explore-events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: LIVE GUEST VIEW (PUBLIC PAGE) ==================== -->
+    <section id="tab-guest" class="hidden pb-16">
+      <!-- Public Page Top Share Bar -->
+      <div class="bg-maroon text-ivory py-2.5 px-4 border-b border-gold/40">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-gold text-charcoal font-bold uppercase text-[10px]">Public Guest Link</span>
+            <span id="guest-share-url-display" class="font-mono text-ivory/90 truncate max-w-[220px] sm:max-w-md">utsavfund.in/aarav-and-meera</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="copyEventLink()" class="px-3 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-white font-semibold transition">Copy Link</button>
+            <button onclick="shareOnWhatsApp()" class="px-3 py-1 rounded-lg bg-emeraldProgress hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-1">
+              <span>WhatsApp</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Celebration Hero Card -->
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10">
+        <div class="bg-white/95 rounded-3xl card-royal p-6 sm:p-10 text-center relative overflow-hidden">
+          <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-maroon-soft text-maroon border border-maroon/20 text-xs font-bold uppercase tracking-widest mb-4">
+            <span id="guest-occasion-emoji">💍</span>
+            <span id="guest-occasion-label">Indian Wedding Celebration</span>
+          </div>
+
+          <h1 id="guest-host-names" class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-maroon tracking-tight mb-3">
+            Aarav &amp; Meera
+          </h1>
+
+          <div class="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-semibold text-charcoal/80 mb-6">
+            <span id="guest-event-date" class="bg-gold-soft px-3.5 py-1.5 rounded-full border border-gold/40">📅 December 14, 2026</span>
+            <span id="guest-countdown-badge" class="bg-maroon-soft text-maroon px-3.5 py-1.5 rounded-full border border-maroon/20">⏳ 23 Days to Go</span>
+            <span id="guest-city-badge" class="bg-ivoryWarm px-3.5 py-1.5 rounded-full border border-gold/30">📍 Bengaluru, India</span>
+          </div>
+
+          <p id="guest-welcome-note" class="max-w-2xl mx-auto text-sm sm:text-base text-charcoal/80 leading-relaxed mb-8 italic">
+            "Your presence and blessings mean the world to us. Instead of traditional boxed gifts, help us build our first home and embark on our honeymoon adventure!"
+          </p>
+
+          <!-- Summary Stats Strip -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto bg-ivoryWarm/85 rounded-2xl p-4 border border-gold/40">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider font-bold text-charcoal/60 block">Overall Progress</span>
+              <span id="guest-stat-percent" class="font-serif text-2xl sm:text-3xl font-bold text-emeraldProgress">63.5% Funded</span>
+            </div>
+            <div class="border-y sm:border-y-0 sm:border-x border-gold/30 py-2 sm:py-0">
+              <span id="guest-stat-middle-label" class="text-[11px] uppercase tracking-wider font-bold text-charcoal/60 block">Total Shagun Raised</span>
+              <span id="guest-stat-raised" class="font-serif text-2xl sm:text-3xl font-bold text-maroon">₹14,15,000</span>
+            </div>
+            <div>
+              <span class="text-[11px] uppercase tracking-wider font-bold text-charcoal/60 block">Blessings Received</span>
+              <span id="guest-stat-count" class="font-serif text-2xl sm:text-3xl font-bold text-gold-dark">18 Guests</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone Goals Grid -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-gold-dark">Choose A Milestone</span>
+            <h2 class="font-serif text-3xl font-bold text-maroon">Future Dreams You Can Bless</h2>
+          </div>
+          <div id="brick-mode-indicator" class="hidden text-xs font-semibold bg-gold-soft text-gold-dark px-3.5 py-1.5 rounded-full border border-gold/40">
+            🧱 Brick Mode Active: 1 Brick = ₹1,000 Shagun
+          </div>
+        </div>
+
+        <div id="guest-goals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Wall of Blessings -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white/90 rounded-3xl card-royal p-6 sm:p-8">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-gold/30">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-widest text-gold-dark">Aashirwad Guestbook</span>
+              <h2 class="font-serif text-2xl sm:text-3xl font-bold text-maroon">Wall of Blessings</h2>
+            </div>
+            <span id="wall-blessing-count" class="text-xs font-bold px-3.5 py-1.5 rounded-full bg-maroon-soft text-maroon self-start sm:self-auto">6 Heartfelt Notes</span>
+          </div>
+
+          <div id="guest-blessings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: HOST BUILDER (SELF-SERVE STUDIO) ==================== -->
+    <section id="tab-builder" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-gold-dark">Self-Serve Studio</span>
+          <h1 class="font-serif text-3xl sm:text-4xl font-bold text-maroon">Customize Your Celebration Page</h1>
+          <p class="text-sm text-charcoal/75 mt-1">Configure your details, UPI ID, privacy settings, and future goals. Changes save automatically.</p>
+        </div>
+        <div class="flex flex-wrap gap-2.5">
+          <button onclick="startNewCelebration()" class="px-4 py-2.5 rounded-xl bg-white border border-gold text-maroon font-bold text-xs sm:text-sm hover:bg-gold-soft transition">
+            + Start Fresh Page
+          </button>
+          <button onclick="switchTab('guest')" class="px-5 py-2.5 rounded-xl bg-maroon text-white font-bold text-xs sm:text-sm hover:bg-maroon-dark transition shadow-md">
+            Preview Public Page →
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Column: Celebration Details & Privacy -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="bg-white rounded-3xl card-royal p-6 space-y-4">
+            <h2 class="font-serif text-2xl font-bold text-maroon border-b border-gold/30 pb-3">1. Event &amp; UPI Details</h2>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-1.5">Occasion Type</label>
+              <select id="builder-occasion" onchange="saveBuilderDetails()" class="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-gold/50 focus:border-maroon outline-none text-sm font-semibold">
+                <option value="Wedding">💍 Indian Wedding (Shubh Vivah)</option>
+                <option value="Housewarming">🏡 Housewarming (Griha Pravesh)</option>
+                <option value="Baby Shower">👶 Baby Shower (Godh Bharai)</option>
+                <option value="Milestone Birthday">🎂 Milestone Birthday</option>
+                <option value="Moving Abroad">✈️ Moving Abroad / Higher Studies</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-1.5">Host / Couple Name(s)</label>
+              <input type="text" id="builder-hosts" oninput="saveBuilderDetails()" placeholder="e.g., Aarav & Meera" class="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-gold/50 focus:border-maroon outline-none text-sm font-semibold" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-1.5">Event Date</label>
+                <input type="date" id="builder-date" onchange="saveBuilderDetails()" class="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-gold/50 focus:border-maroon outline-none text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-1.5">City / Venue</label>
+                <input type="text" id="builder-city" oninput="saveBuilderDetails()" placeholder="e.g., Bengaluru" class="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-gold/50 focus:border-maroon outline-none text-sm" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-1.5">Your Direct UPI ID (Zero Platform Fees)</label>
+              <div class="relative">
+                <input type="text" id="builder-upi" oninput="saveBuilderDetails()" placeholder="e.g., aarav.meera@okicici" class="w-full pl-3.5 pr-20 py-2.5 rounded-xl bg-ivory border border-gold/60 focus:border-maroon outline-none text-sm font-mono font-bold text-maroon" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-emerald-100 text-emeraldProgress px-2 py-0.5 rounded">0% FEE</span>
+              </div>
+              <p class="text-[11px] text-charcoal/60 mt-1">Guests scan a dynamic QR linked straight to this UPI ID.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-1.5">Welcome Story / Note for Guests</label>
+              <textarea id="builder-note" rows="3" oninput="saveBuilderDetails()" placeholder="Write a warm note explaining what you're saving for..." class="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-gold/50 focus:border-maroon outline-none text-sm"></textarea>
+            </div>
+          </div>
+
+          <!-- Cultural Privacy Toggle Card -->
+          <div class="bg-white rounded-3xl card-royal p-6 space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-widest bg-gold-soft text-gold-dark px-2.5 py-0.5 rounded-full">Cultural Psychology Feature</span>
+                <h3 class="font-serif text-xl font-bold text-maroon mt-1">Brick / Milestone Display Mode</h3>
+              </div>
+              <label class="inline-flex items-center cursor-pointer mt-1">
+                <input type="checkbox" id="builder-brick-toggle" onchange="saveBuilderDetails()" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-maroon relative"></div>
+              </label>
+            </div>
+            <p class="text-xs text-charcoal/75 leading-relaxed">
+              <strong>Why use Brick Mode?</strong> Showing a ₹20,00,000 target can make guests giving ₹501 feel their gift is tiny. When enabled, guests see <strong>"% Funded"</strong> and <strong>"₹1,000 Bricks"</strong> (e.g., <em>"1,250 / 2,000 Bricks Funded"</em>) instead of raw rupee totals.
+            </p>
+          </div>
+
+          <!-- Share Box -->
+          <div class="bg-maroon text-ivory rounded-3xl p-6 border-2 border-gold shadow-lg space-y-3">
+            <h3 class="font-serif text-xl font-bold text-gold">Share Your Celebration Link</h3>
+            <div class="flex items-center gap-2 bg-white/10 p-2 rounded-xl border border-white/20">
+              <input type="text" id="builder-share-input" readonly value="https://utsavfund.in/aarav-and-meera" class="bg-transparent text-xs font-mono text-white w-full outline-none px-2" />
+              <button onclick="copyEventLink()" class="px-3 py-1.5 rounded-lg bg-gold text-charcoal font-bold text-xs shrink-0 hover:bg-gold-light transition">Copy</button>
+            </div>
+            <button onclick="shareOnWhatsApp()" class="w-full py-2.5 rounded-xl bg-emeraldProgress hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2">
+              Share Invite Directly on WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Goal Manager -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="bg-white rounded-3xl card-royal p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gold/30 pb-4 mb-5">
+              <div>
+                <h2 class="font-serif text-2xl font-bold text-maroon">2. Manage Future Milestone Goals</h2>
+                <p class="text-xs text-charcoal/70">Add big goals like a Home Deposit or smaller ones like Honeymoon Experiences.</p>
+              </div>
+              <button onclick="openGoalModal()" class="px-4 py-2 rounded-xl bg-maroon text-white font-bold text-xs sm:text-sm hover:bg-maroon-dark transition shrink-0">
+                + Add Milestone Goal
+              </button>
+            </div>
+
+            <div id="builder-goals-list" class="space-y-4">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: HOST SHAGUN LEDGER (DASHBOARD) ==================== -->
+    <section id="tab-ledger" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-gold-dark">Host Accounting &amp; Gratitude</span>
+          <h1 class="font-serif text-3xl sm:text-4xl font-bold text-maroon">Shagun Book &amp; Blessing Ledger</h1>
+          <p class="text-sm text-charcoal/75 mt-1">Track every rupee gifted, filter by milestone, export your Shagun CSV, and send instant WhatsApp thank-yous.</p>
+        </div>
+        <button onclick="exportShagunCSV()" class="px-5 py-2.5 rounded-xl bg-maroon text-white font-bold text-xs sm:text-sm hover:bg-maroon-dark transition shadow-md flex items-center gap-2 self-start md:self-auto">
+          <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Export Shagun Book (CSV)
+        </button>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-2xl p-5 card-royal">
+          <span class="text-xs font-bold uppercase tracking-wider text-charcoal/60">Total Shagun Received</span>
+          <div id="ledger-kpi-total" class="font-serif text-3xl font-bold text-maroon mt-1">₹14,15,000</div>
+          <span class="text-xs text-emeraldProgress font-semibold mt-1 inline-block">100% Direct to UPI</span>
+        </div>
+        <div class="bg-white rounded-2xl p-5 card-royal">
+          <span class="text-xs font-bold uppercase tracking-wider text-charcoal/60">Total Goal Target</span>
+          <div id="ledger-kpi-target" class="font-serif text-3xl font-bold text-charcoal mt-1">₹22,30,000</div>
+          <span id="ledger-kpi-pct" class="text-xs text-gold-dark font-semibold mt-1 inline-block">63.5% Achieved</span>
+        </div>
+        <div class="bg-white rounded-2xl p-5 card-royal">
+          <span class="text-xs font-bold uppercase tracking-wider text-charcoal/60">Total Contributors</span>
+          <div id="ledger-kpi-count" class="font-serif text-3xl font-bold text-maroon mt-1">6</div>
+          <span class="text-xs text-charcoal/60 mt-1 inline-block">Friends &amp; Family</span>
+        </div>
+        <div class="bg-white rounded-2xl p-5 card-royal">
+          <span class="text-xs font-bold uppercase tracking-wider text-charcoal/60">Top Funded Milestone</span>
+          <div id="ledger-kpi-top-goal" class="font-serif text-xl font-bold text-gold-dark mt-1 truncate">First Home Deposit</div>
+          <span class="text-xs text-charcoal/60 mt-1 inline-block">Highest Shagun Volume</span>
+        </div>
+      </div>
+
+      <!-- Goal Breakdown Bars -->
+      <div class="bg-white rounded-3xl card-royal p-6 mb-8">
+        <h2 class="font-serif text-2xl font-bold text-maroon mb-4">Breakdown by Milestone</h2>
+        <div id="ledger-goal-breakdown" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Search & Filter Table -->
+      <div class="bg-white rounded-3xl card-royal overflow-hidden">
+        <div class="p-5 sm:p-6 border-b border-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="relative flex-grow max-w-md">
+            <input type="text" id="ledger-search" oninput="renderLedger()" placeholder="Search guest name or blessing message..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-ivory border border-gold/50 focus:border-maroon outline-none text-sm" />
+            <svg class="w-4 h-4 text-charcoal/50 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          <select id="ledger-goal-filter" onchange="renderLedger()" class="px-3.5 py-2 rounded-xl bg-ivory border border-gold/50 text-sm font-semibold outline-none">
+            <option value="ALL">All Milestones</option>
+          </select>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-ivoryWarm/80 border-b border-gold/30 text-[11px] uppercase tracking-wider text-charcoal/70 font-bold">
+                <th class="py-3.5 px-4">Guest Name</th>
+                <th class="py-3.5 px-4">Milestone Funded</th>
+                <th class="py-3.5 px-4">Amount (₹)</th>
+                <th class="py-3.5 px-4">Blessing Note</th>
+                <th class="py-3.5 px-4">Date</th>
+                <th class="py-3.5 px-4 text-right">Gratitude Action</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-table-body" class="divide-y divide-gold/20 text-sm">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-maroon text-ivory/90 border-t-4 border-gold py-8 px-4 sm:px-6 lg:px-8 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <span class="font-serif text-xl font-bold text-gold">UtsavFund</span>
+        <p class="text-xs text-ivory/75 mt-1">Self-Serve Milestone Gifting for Weddings, Griha Pravesh &amp; Life's Big Moments</p>
+      </div>
+      <div class="text-xs text-ivory/75">
+        Direct UPI Transfers • Zero Platform Fees • Built for Modern Indian Celebrations
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL 1: ZERO-FRICTION GIFTING & UPI MODAL ==================== -->
+  <div id="gift-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-5 bg-charcoal/70 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-ivory rounded-3xl card-royal max-w-lg w-full overflow-hidden shadow-2xl my-auto">
+      <!-- Header -->
+      <div class="bg-maroon text-white px-6 py-4 flex items-center justify-between border-b-2 border-gold">
+        <div>
+          <span class="text-[10px] uppercase tracking-widest text-gold font-bold block">Send Your Aashirwad</span>
+          <h3 id="gift-modal-goal-title" class="font-serif text-xl sm:text-2xl font-bold">First Home Down Payment</h3>
+        </div>
+        <button onclick="closeGiftModal()" class="p-2 rounded-full hover:bg-white/10 text-ivory transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Step 1: Select Shagun & Blessing -->
+      <div id="gift-step-1" class="p-5 sm:p-6 space-y-5">
+        <!-- Live Impact Preview -->
+        <div class="bg-white rounded-2xl p-4 border border-gold/50">
+          <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+            <span class="text-charcoal/70">Live Milestone Impact</span>
+            <span id="gift-impact-badge" class="text-emeraldProgress bg-emerald-50 px-2.5 py-0.5 rounded-full">+0.11% Boost</span>
+          </div>
+          <div class="w-full h-3 bg-ivoryWarm rounded-full overflow-hidden flex p-0.5 border border-gold/30">
+            <div id="gift-bar-current" class="h-full bg-emeraldProgress rounded-l-full transition-all duration-300" style="width: 60%"></div>
+            <div id="gift-bar-added" class="h-full bg-gold transition-all duration-300" style="width: 3%"></div>
+          </div>
+          <p id="gift-impact-sentence" class="text-xs text-charcoal/80 mt-2">
+            Your <strong class="text-maroon">₹2,101</strong> fills <strong>+0.11%</strong> of their First Home goal!
+          </p>
+        </div>
+
+        <!-- Auspicious Shagun Presets -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-charcoal/75 mb-2">Select Auspicious Shagun Amount (₹)</label>
+          <div class="grid grid-cols-4 gap-2 mb-2.5">
+            <button type="button" onclick="selectGiftPreset(501)" data-preset="501" class="gift-preset-btn py-2 rounded-xl border border-gold/50 bg-white text-xs sm:text-sm font-bold hover:border-maroon transition">₹501</button>
+            <button type="button" onclick="selectGiftPreset(1001)" data-preset="1001" class="gift-preset-btn py-2 rounded-xl border border-gold/50 bg-white text-xs sm:text-sm font-bold hover:border-maroon transition">₹1,001</button>
+            <button type="button" onclick="selectGiftPreset(2101)" data-preset="2101" class="gift-preset-btn py-2 rounded-xl border-2 border-maroon bg-maroon-soft text-maroon text-xs sm:text-sm font-bold transition">₹2,101</button>
+            <button type="button" onclick="selectGiftPreset(5001)" data-preset="5001" class="gift-preset-btn py-2 rounded-xl border border-gold/50 bg-white text-xs sm:text-sm font-bold hover:border-maroon transition">₹5,001</button>
+          </div>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-maroon">₹</span>
+            <input type="number" id="gift-custom-amount" value="2101" min="1" oninput="updateGiftImpactPreview()" class="w-full pl-8 pr-4 py-2.5 rounded-xl bg-white border border-gold/60 focus:border-maroon outline-none font-bold text-base" />
+          </div>
+        </div>
+
+        <!-- Guest Name & Relation -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-charcoal/80 mb-1">Your Name *</label>
+            <input type="text" id="gift-guest-name" placeholder="e.g., Rohan & Sneha" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-charcoal/80 mb-1">Relation</label>
+            <select id="gift-guest-relation" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm">
+              <option value="Family">Family</option>
+              <option value="Close Friend">Close Friend</option>
+              <option value="Colleague">Colleague</option>
+              <option value="Well-Wisher">Well-Wisher</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Blessing Message -->
+        <div>
+          <label class="block text-xs font-bold text-charcoal/80 mb-1">Your Blessing Note</label>
+          <textarea id="gift-guest-message" rows="2" placeholder="Wishing you endless joy, prosperity, and a wonderful new chapter together!" class="w-full px-3.5 py-2 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm"></textarea>
+        </div>
+
+        <button type="button" onclick="goToUpiStep()" class="w-full py-3.5 rounded-xl bg-maroon hover:bg-maroon-dark text-white font-bold text-sm sm:text-base shadow-lg transition">
+          Proceed to Direct UPI Payment →
+        </button>
+      </div>
+
+      <!-- Step 2: Dynamic UPI QR & Mobile Deep Link -->
+      <div id="gift-step-2" class="hidden p-5 sm:p-6 space-y-5 text-center">
+        <div class="bg-gold-soft border border-gold/50 rounded-2xl p-3 flex items-center justify-between text-left">
+          <div>
+            <span class="text-[11px] text-charcoal/70 block">Direct Zero-Fee Transfer</span>
+            <strong id="upi-pay-amount-label" class="font-serif text-2xl font-bold text-maroon">₹2,101</strong>
+          </div>
+          <button type="button" onclick="backToGiftStep1()" class="text-xs font-bold text-maroon underline">Edit Amount</button>
+        </div>
+
+        <!-- Dynamic QR Code Container -->
+        <div class="bg-white p-4 rounded-2xl border border-gold/40 inline-block mx-auto shadow-sm">
+          <img id="dynamic-upi-qr" src="" alt="Scan UPI QR Code" class="w-44 h-44 mx-auto rounded-lg" />
+          <div class="mt-2 text-xs font-mono font-bold text-charcoal bg-ivoryWarm px-3 py-1 rounded-full" id="upi-id-display">
+            aarav.meera@okicici
+          </div>
+        </div>
+
+        <p class="text-xs text-charcoal/75 max-w-sm mx-auto">
+          Scan with <strong>GPay, PhonePe, Paytm, or BHIM</strong>, or tap below on mobile to open your UPI app directly.
+        </p>
+
+        <div class="space-y-2.5">
+          <a id="upi-deep-link-btn" href="#" class="block w-full py-3 rounded-xl bg-gold hover:bg-gold-dark text-charcoal font-bold text-sm transition shadow">
+            Open UPI App on Phone (GPay / PhonePe)
+          </a>
+          <button type="button" onclick="confirmUpiGiftSent()" class="w-full py-3.5 rounded-xl bg-emeraldProgress hover:bg-emerald-700 text-white font-bold text-sm sm:text-base shadow-lg transition">
+            ✓ I've Sent the UPI Payment
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Shareable Blessing Card / Thank You Badge -->
+      <div id="gift-step-3" class="hidden p-5 sm:p-6 space-y-5 text-center">
+        <div class="text-emeraldProgress font-bold text-sm">🎉 Shagun Recorded &amp; Added to Wall of Blessings!</div>
+
+        <!-- Downloadable/Previewable Status Card -->
+        <div id="blessing-badge-card" class="bg-gradient-to-br from-maroon via-maroon-dark to-charcoal text-ivory p-6 rounded-3xl border-2 border-gold shadow-xl relative overflow-hidden">
+          <div class="text-[10px] uppercase tracking-[0.25em] text-gold font-bold mb-2">॥ शुभ आशीर्वाद ॥</div>
+          <h4 class="font-serif text-2xl font-bold text-white mb-1" id="badge-guest-name">Rohan &amp; Sneha</h4>
+          <p class="text-xs text-ivory/80 mb-4">just blessed <strong class="text-gold" id="badge-host-names">Aarav &amp; Meera</strong>'s milestone</p>
+          <div class="inline-block bg-white/10 border border-gold/50 rounded-2xl px-4 py-2 mb-4">
+            <span class="text-xs text-gold block font-semibold" id="badge-goal-name">First Home Down Payment</span>
+            <span class="font-serif text-xl font-bold text-white" id="badge-amount">₹2,101 Shagun</span>
+          </div>
+          <p class="text-xs italic text-ivory/90 max-w-xs mx-auto" id="badge-quote">"Wishing you endless joy and prosperity!"</p>
+          <div class="mt-4 pt-3 border-t border-white/15 text-[10px] text-gold/90 tracking-wider uppercase">UtsavFund.in • Zero-Fee Celebration Registry</div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <button type="button" onclick="downloadBlessingBadge()" class="flex-1 py-3 rounded-xl bg-gold text-charcoal font-bold text-xs sm:text-sm hover:bg-gold-light transition">
+            Download Status Card (PNG)
+          </button>
+          <button type="button" onclick="closeGiftModal()" class="flex-1 py-3 rounded-xl bg-maroon text-white font-bold text-xs sm:text-sm hover:bg-maroon-dark transition">
+            Done &amp; View Wall
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: ADD / EDIT GOAL MODAL ==================== -->
+  <div id="goal-editor-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-charcoal/70 backdrop-blur-sm">
+    <div class="bg-ivory rounded-3xl card-royal max-w-md w-full overflow-hidden shadow-2xl">
+      <div class="bg-maroon text-white px-6 py-4 flex items-center justify-between border-b-2 border-gold">
+        <h3 id="goal-modal-heading" class="font-serif text-xl font-bold">Add Future Milestone Goal</h3>
+        <button onclick="closeGoalModal()" class="p-1.5 rounded-full hover:bg-white/10 text-ivory">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <input type="hidden" id="edit-goal-id" value="" />
+        <div>
+          <label class="block text-xs font-bold uppercase text-charcoal/75 mb-1">Milestone Title *</label>
+          <input type="text" id="edit-goal-title" placeholder="e.g., First Home Down Payment" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm font-semibold" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-charcoal/75 mb-1">Icon / Category</label>
+            <select id="edit-goal-icon" class="w-full px-3 py-2.5 rounded-xl bg-white border border-gold/50 text-sm">
+              <option value="🏡">🏡 Dream Home</option>
+              <option value="✈️">✈️ Honeymoon / Travel</option>
+              <option value="🛋️">🛋️ Home &amp; Furniture</option>
+              <option value="👶">👶 Baby &amp; Education</option>
+              <option value="🚗">🚗 First Family Car</option>
+              <option value="💍">💍 Gold &amp; Future Nest</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-charcoal/75 mb-1">Target Amount (₹) *</label>
+            <input type="number" id="edit-goal-target" placeholder="2000000" min="1000" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm font-bold" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-charcoal/75 mb-1">Already Saved / Raised (₹)</label>
+          <input type="number" id="edit-goal-raised" placeholder="0" min="0" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-charcoal/75 mb-1">Short Description</label>
+          <textarea id="edit-goal-desc" rows="2" placeholder="Tell guests how this milestone helps your future..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-gold/50 focus:border-maroon outline-none text-sm"></textarea>
+        </div>
+        <button type="button" onclick="saveGoalFromModal()" class="w-full py-3 rounded-xl bg-maroon hover:bg-maroon-dark text-white font-bold text-sm shadow-md transition">
+          Save Milestone Goal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase + Application Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // ==================== INITIAL SEED DATA ====================
+    const DEFAULT_EVENTS = [
+      {
+        id: "aarav-and-meera",
+        occasion: "Wedding",
+        hosts: "Aarav & Meera",
+        date: "2026-12-14",
+        city: "Bengaluru",
+        upiId: "aarav.meera@okicici",
+        brickMode: false,
+        note: "Your presence and blessings at our wedding are the greatest gifts we could ask for. Instead of duplicate dinner sets, we invite you to bless our next big chapters—our first home in Bengaluru and our honeymoon in Bali!",
+        goals: [
+          {
+            id: "g1",
+            icon: "🏡",
+            title: "First Home Down Payment",
+            target: 2000000,
+            raised: 1250000,
+            desc: "Helping us put down the deposit on our very first 2BHK apartment in Indiranagar."
+          },
+          {
+            id: "g2",
+            icon: "✈️",
+            title: "Bali & Ubud Honeymoon",
+            target: 150000,
+            raised: 112500,
+            desc: "Flights, cliffside villa stay, and sunset dinners for our first trip as husband and wife."
+          },
+          {
+            id: "g3",
+            icon: "🛋️",
+            title: "Living Room & Balcony Garden",
+            target: 80000,
+            raised: 52500,
+            desc: "A cozy sofa, teakwood dining table, and lush balcony plants for hosting family dinners."
+          }
+        ],
+        blessings: [
+          { id: "b1", guest: "Vikram & Sunita Sharma", relation: "Family", goalId: "g1", goalTitle: "First Home Down Payment", amount: 21000, message: "May your new home always be filled with laughter, warmth, and prosperity. Sada suhagan raho!", date: "2026-11-18" },
+          { id: "b2", guest: "Rohan Kulkarni", relation: "Close Friend", goalId: "g2", goalTitle: "Bali & Ubud Honeymoon", amount: 5001, message: "Have an unforgettable honeymoon in Bali bhai! First round of sunset drinks on me.", date: "2026-11-19" },
+          { id: "b3", guest: "Dr. Anjali Nair", relation: "Family", goalId: "g1", goalTitle: "First Home Down Payment", amount: 11001, message: "Heartiest congratulations Aarav & Meera! So proud to contribute toward your dream home.", date: "2026-11-19" },
+          { id: "b4", guest: "Siddharth & Priya", relation: "Close Friend", goalId: "g3", goalTitle: "Living Room & Balcony Garden", amount: 2101, message: "Adding a little greenery to your new balcony! Can't wait for the housewarming party.", date: "2026-11-20" },
+          { id: "b5", guest: "Harish Uncle & Kavita Aunty", relation: "Family", goalId: "g1", goalTitle: "First Home Down Payment", amount: 5100, message: "God bless you both with a lifetime of togetherness and happiness.", date: "2026-11-20" },
+          { id: "b6", guest: "Neha Deshmukh", relation: "Colleague", goalId: "g2", goalTitle: "Bali & Ubud Honeymoon", amount: 1001, message: "Wishing you two a magical wedding and an amazing trip ahead!", date: "2026-11-21" }
+        ]
+      },
+      {
+        id: "kapoor-griha-pravesh",
+        occasion: "Housewarming",
+        hosts: "Kabir & Rhea Kapoor",
+        date: "2026-12-05",
+        city: "Mumbai",
+        upiId: "kabir.kapoor@oksbi",
+        brickMode: true,
+        note: "We finally got the keys to our new home! Instead of showpieces or bouquets, chip in a few bricks toward setting up our modular kitchen and home office.",
+        goals: [
+          { id: "k1", icon: "🛋️", title: "Modular Kitchen & Appliances", target: 300000, raised: 210000, desc: "Chimney, dishwasher, and espresso corner for Sunday family brunches." },
+          { id: "k2", icon: "🏡", title: "Master Bedroom Setup", target: 150000, raised: 96000, desc: "King-size teak bed and blackout curtains." }
+        ],
+        blessings: [
+          { id: "kb1", guest: "Meera & Rajeev Kapoor", relation: "Family", goalId: "k1", goalTitle: "Modular Kitchen & Appliances", amount: 11001, message: "Warmest Griha Pravesh wishes! May your kitchen always overflow with abundance.", date: "2026-11-17" },
+          { id: "kb2", guest: "Aditya Verma", relation: "Close Friend", goalId: "k2", goalTitle: "Master Bedroom Setup", amount: 2101, message: "Congrats on the new pad Kabir! See you at the Puja.", date: "2026-11-20" }
+        ]
+      },
+      {
+        id: "baby-aarohi-shower",
+        occasion: "Baby Shower",
+        hosts: "Nandini & Pranav Rao",
+        date: "2026-12-20",
+        city: "Hyderabad",
+        upiId: "pranav.rao@okhdfcbank",
+        brickMode: false,
+        note: "We are overjoyed to welcome Baby Rao soon! Help us build a nursery and start an early education fund for our little bundle of joy.",
+        goals: [
+          { id: "n1", icon: "👶", title: "Little One's Education Sukanya Fund", target: 500000, raised: 325000, desc: "Long-term savings seed for our baby's future schooling and dreams." },
+          { id: "n2", icon: "🏡", title: "Cozy Nursery & Crib", target: 60000, raised: 44000, desc: "Convertible wooden crib, stroller, and organic cotton bedding." }
+        ],
+        blessings: [
+          { id: "nb1", guest: "Lakshmi & Suresh Rao", relation: "Family", goalId: "n1", goalTitle: "Little One's Education Sukanya Fund", amount: 25001, message: "All our love and blessings to the mom-to-be and our future grandchild!", date: "2026-11-15" }
+        ]
+      }
+    ];
+
+    // ==================== STATE MANAGEMENT ====================
+    let eventsList = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+    let activeEventId = "aarav-and-meera";
+    let activeGiftGoalId = null;
+    let db = null;
+    let currentUser = null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'utsavfund-default';
+
+    // Indian Rupee Formatter (e.g., ₹20,00,000)
+    function formatINR(num) {
+      const val = Math.round(Number(num) || 0);
+      return "₹" + val.toLocaleString("en-IN");
+    }
+
+    function getActiveEvent() {
+      return eventsList.find(e => e.id === activeEventId) || eventsList[0];
+    }
+
+    function getOccasionEmoji(occ) {
+      const map = {
+        "Wedding": "💍",
+        "Housewarming": "🏡",
+        "Baby Shower": "👶",
+        "Milestone Birthday": "🎂",
+        "Moving Abroad": "✈️"
+      };
+      return map[occ] || "✨";
+    }
+
+    // ==================== FIREBASE PERSISTENCE ====================
+    async function initCloudSync() {
+      try {
+        if (typeof __firebase_config === 'undefined') {
+          renderAll();
+          return;
+        }
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        db = getFirestore(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        currentUser = auth.currentUser;
+        if (!currentUser) {
+          renderAll();
+          return;
+        }
+
+        const publicCol = collection(db, 'artifacts', appId, 'public', 'data', 'celebrations');
+        onSnapshot(publicCol, async (snapshot) => {
+          if (snapshot.empty) {
+            // Seed initial events once
+            for (const ev of DEFAULT_EVENTS) {
+              await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'celebrations', ev.id), ev);
+            }
+          } else {
+            const loaded = [];
+            snapshot.forEach(docSnap => loaded.push(docSnap.data()));
+            if (loaded.length > 0) {
+              eventsList = loaded;
+              if (!eventsList.some(e => e.id === activeEventId)) {
+                activeEventId = eventsList[0].id;
+              }
+            }
+            renderAll();
+          }
+        }, (err) => {
+          console.warn("Firestore sync fallback:", err);
+          renderAll();
+        });
+      } catch (e) {
+        console.warn("Running in local state mode:", e);
+        renderAll();
+      }
+    }
+
+    async function persistEvent(eventObj) {
+      renderAll();
+      if (!db || !currentUser) return;
+      try {
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'celebrations', eventObj.id), eventObj);
+      } catch (err) {
+        console.error("Failed to save celebration:", err);
+      }
+    }
+
+    // ==================== NAVIGATION & TABS ====================
+    window.switchTab = function(tabName) {
+      ['explore', 'guest', 'builder', 'ledger'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`nav-${t}`);
+        btn.classList.remove('bg-maroon', 'text-white', 'shadow-sm');
+        btn.classList.add('text-charcoal/80');
+      });
+
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`nav-${tabName}`);
+      activeBtn.classList.add('bg-maroon', 'text-white', 'shadow-sm');
+      activeBtn.classList.remove('text-charcoal/80');
+
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.selectEventAndView = function(eventId, targetTab = 'guest') {
+      activeEventId = eventId;
+      switchTab(targetTab);
+    };
+
+    window.startNewCelebration = function() {
+      const slug = "celebration-" + Math.floor(1000 + Math.random() * 9000);
+      const newEv = {
+        id: slug,
+        occasion: "Wedding",
+        hosts: "Your Name & Partner",
+        date: "2026-12-25",
+        city: "New Delhi",
+        upiId: "yourname@okicici",
+        brickMode: false,
+        note: "Your blessings mean everything to us! Help us fund our upcoming milestones instead of traditional gifts.",
+        goals: [
+          {
+            id: "goal-" + Date.now(),
+            icon: "🏡",
+            title: "Our First Home Fund",
+            target: 1000000,
+            raised: 0,
+            desc: "Every rupee brings us closer to our own front door."
+          }
+        ],
+        blessings: []
+      };
+      eventsList.unshift(newEv);
+      activeEventId = slug;
+      persistEvent(newEv);
+      switchTab('builder');
+      showToast("Created your blank celebration page! Customize it below.");
+    };
+
+    // ==================== RENDER FUNCTIONS ====================
+    function renderAll() {
+      const ev = getActiveEvent();
+      document.getElementById('header-active-event').textContent = ev.hosts;
+      renderExplore();
+      renderGuestView();
+      renderBuilderView();
+      renderLedger();
+    }
+
+    function renderExplore() {
+      const grid = document.getElementById('explore-events-grid');
+      grid.innerHTML = eventsList.map(ev => {
+        const totalTarget = ev.goals.reduce((s, g) => s + Number(g.target), 0);
+        const totalRaised = ev.goals.reduce((s, g) => s + Number(g.raised), 0);
+        const pct = totalTarget > 0 ? Math.min(100, ((totalRaised / totalTarget) * 100)).toFixed(1) : 0;
+        const isCurrent = ev.id === activeEventId;
+
+        return `
+          <div class="bg-white rounded-3xl card-royal p-6 flex flex-col justify-between transition hover:-translate-y-1 ${isCurrent ? 'ring-2 ring-maroon' : ''}">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="px-3 py-1 rounded-full bg-maroon-soft text-maroon text-xs font-bold">
+                  ${getOccasionEmoji(ev.occasion)} ${ev.occasion}
+                </span>
+                <span class="text-xs font-semibold text-charcoal/60">📍 ${ev.city}</span>
+              </div>
+              <h3 class="font-serif text-2xl font-bold text-maroon mb-1">${ev.hosts}</h3>
+              <p class="text-xs text-charcoal/70 line-clamp-2 mb-4">${ev.note}</p>
+
+              <div class="bg-ivoryWarm rounded-2xl p-3.5 mb-4 border border-gold/30">
+                <div class="flex justify-between text-xs font-bold mb-1.5">
+                  <span class="text-emeraldProgress">${pct}% Funded</span>
+                  <span class="text-charcoal/70">${ev.goals.length} Milestones</span>
+                </div>
+                <div class="w-full h-2.5 bg-white rounded-full overflow-hidden border border-gold/30">
+                  <div class="h-full bg-emeraldProgress rounded-full" style="width: ${pct}%"></div>
+                </div>
+                <div class="flex justify-between text-[11px] text-charcoal/65 mt-1.5">
+                  <span>${ev.brickMode ? Math.floor(totalRaised / 1000) + ' Bricks' : formatINR(totalRaised)}</span>
+                  <span>${ev.blessings.length} Blessings</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <button onclick="selectEventAndView('${ev.id}', 'guest')" class="py-2.5 px-3 rounded-xl bg-maroon text-white font-bold text-xs hover:bg-maroon-dark transition">
+                Open Guest Page
+              </button>
+              <button onclick="selectEventAndView('${ev.id}', 'builder')" class="py-2.5 px-3 rounded-xl bg-gold-soft text-maroon border border-gold font-bold text-xs hover:bg-gold/25 transition">
+                Edit in Builder
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderGuestView() {
+      const ev = getActiveEvent();
+      document.getElementById('guest-share-url-display').textContent = `utsavfund.in/${ev.id}`;
+      document.getElementById('guest-occasion-emoji').textContent = getOccasionEmoji(ev.occasion);
+      document.getElementById('guest-occasion-label').textContent = `${ev.occasion} Celebration`;
+      document.getElementById('guest-host-names').textContent = ev.hosts;
+      document.getElementById('guest-city-badge').textContent = `📍 ${ev.city}, India`;
+      document.getElementById('guest-welcome-note').textContent = `"${ev.note}"`;
+
+      // Format Date & Countdown
+      const eventDateObj = new Date(ev.date + "T00:00:00");
+      const formattedDate = isNaN(eventDateObj) ? ev.date : eventDateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('guest-event-date').textContent = `📅 ${formattedDate}`;
+
+      const today = new Date();
+      const diffDays = Math.ceil((eventDateObj - today) / (1000 * 60 * 60 * 24));
+      document.getElementById('guest-countdown-badge').textContent = diffDays > 0 ? `⏳ ${diffDays} Days to Go` : `🎉 Celebration Live`;
+
+      // Summary Stats
+      const totalTarget = ev.goals.reduce((s, g) => s + Number(g.target), 0);
+      const totalRaised = ev.goals.reduce((s, g) => s + Number(g.raised), 0);
+      const overallPct = totalTarget > 0 ? ((totalRaised / totalTarget) * 100).toFixed(1) : "0.0";
+
+      document.getElementById('guest-stat-percent').textContent = `${overallPct}% Funded`;
+      if (ev.brickMode) {
+        document.getElementById('guest-stat-middle-label').textContent = "Total Bricks Gifted";
+        document.getElementById('guest-stat-raised').textContent = `${Math.floor(totalRaised / 1000).toLocaleString('en-IN')} Bricks`;
+        document.getElementById('brick-mode-indicator').classList.remove('hidden');
+      } else {
+        document.getElementById('guest-stat-middle-label').textContent = "Total Shagun Raised";
+        document.getElementById('guest-stat-raised').textContent = formatINR(totalRaised);
+        document.getElementById('brick-mode-indicator').classList.add('hidden');
+      }
+      document.getElementById('guest-stat-count').textContent = `${ev.blessings.length} Guests`;
+
+      // Render Goal Cards
+      const goalsGrid = document.getElementById('guest-goals-grid');
+      goalsGrid.innerHTML = ev.goals.map(goal => {
+        const pct = goal.target > 0 ? Math.min(100, ((goal.raised / goal.target) * 100)).toFixed(1) : 0;
+        const bricksRaised = Math.floor(goal.raised / 1000);
+        const bricksTarget = Math.max(1, Math.floor(goal.target / 1000));
+
+        const amountDisplay = ev.brickMode
+          ? `<span><strong class="text-maroon">${bricksRaised.toLocaleString('en-IN')}</strong> / ${bricksTarget.toLocaleString('en-IN')} Bricks</span>`
+          : `<span><strong class="text-maroon">${formatINR(goal.raised)}</strong> raised of ${formatINR(goal.target)}</span>`;
+
+        return `
+          <div class="bg-white rounded-3xl card-royal p-6 flex flex-col justify-between transition hover:shadow-xl">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl bg-gold-soft border border-gold/50 flex items-center justify-center text-2xl">
+                    ${goal.icon}
+                  </div>
+                  <div>
+                    <h3 class="font-serif text-2xl font-bold text-maroon leading-snug">${goal.title}</h3>
+                    <span class="text-xs font-bold text-emeraldProgress">${pct}% Completed</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs sm:text-sm text-charcoal/75 mb-5 leading-relaxed">${goal.desc || ''}</p>
+
+              <!-- Progress Bar -->
+              <div class="mb-5">
+                <div class="flex justify-between text-xs font-semibold text-charcoal/80 mb-1.5">
+                  ${amountDisplay}
+                  <span class="font-bold text-emeraldProgress">${pct}%</span>
+                </div>
+                <div class="w-full h-3.5 bg-ivoryWarm rounded-full overflow-hidden p-0.5 border border-gold/40">
+                  <div class="h-full bg-emeraldProgress rounded-full progress-shimmer transition-all duration-500" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="openGiftModal('${goal.id}')" class="w-full py-3.5 rounded-2xl bg-maroon hover:bg-maroon-dark text-white font-bold text-sm shadow-md shadow-maroon/15 transition flex items-center justify-center gap-2">
+              <span>Bless This Milestone</span>
+              <span class="text-gold">→</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Render Wall of Blessings
+      document.getElementById('wall-blessing-count').textContent = `${ev.blessings.length} Heartfelt Notes`;
+      const blessingsGrid = document.getElementById('guest-blessings-grid');
+
+      if (ev.blessings.length === 0) {
+        blessingsGrid.innerHTML = `<div class="col-span-full text-center py-8 text-sm text-charcoal/60">No blessings yet. Be the first to bless ${ev.hosts}!</div>`;
+      } else {
+        blessingsGrid.innerHTML = ev.blessings.slice().reverse().map(b => `
+          <div class="bg-ivory rounded-2xl p-5 border border-gold/40 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="font-bold text-sm text-maroon">${b.guest}</span>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-gold-soft text-gold-dark border border-gold/40">
+                  ${ev.brickMode ? Math.max(1, Math.round(b.amount / 1000)) + ' Brick(s)' : formatINR(b.amount)}
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-charcoal/85 italic leading-relaxed mb-3">"${b.message || 'Warmest wishes and blessings!'}"</p>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-charcoal/55 pt-2 border-t border-gold/20">
+              <span>🎯 ${b.goalTitle}</span>
+              <span>${b.relation}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderBuilderView() {
+      const ev = getActiveEvent();
+      document.getElementById('builder-occasion').value = ev.occasion;
+      document.getElementById('builder-hosts').value = ev.hosts;
+      document.getElementById('builder-date').value = ev.date;
+      document.getElementById('builder-city').value = ev.city;
+      document.getElementById('builder-upi').value = ev.upiId;
+      document.getElementById('builder-note').value = ev.note;
+      document.getElementById('builder-brick-toggle').checked = !!ev.brickMode;
+      document.getElementById('builder-share-input').value = `https://utsavfund.in/${ev.id}`;
+
+      const list = document.getElementById('builder-goals-list');
+      list.innerHTML = ev.goals.map(g => {
+        const pct = g.target > 0 ? Math.min(100, ((g.raised / g.target) * 100)).toFixed(1) : 0;
+        return `
+          <div class="bg-ivory rounded-2xl p-4 border border-gold/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl bg-white p-2.5 rounded-xl border border-gold/30">${g.icon}</span>
+              <div>
+                <h4 class="font-serif text-lg font-bold text-maroon">${g.title}</h4>
+                <p class="text-xs text-charcoal/70 mb-1">${g.desc || ''}</p>
+                <div class="text-xs font-semibold text-charcoal/80">
+                  Target: <strong class="text-maroon">${formatINR(g.target)}</strong> • Raised: <strong class="text-emeraldProgress">${formatINR(g.raised)} (${pct}%)</strong>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+              <button onclick="openGoalModal('${g.id}')" class="px-3 py-1.5 rounded-lg bg-white border border-gold text-xs font-bold text-maroon hover:bg-gold-soft">Edit</button>
+              <button onclick="deleteGoal('${g.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-xs font-bold text-red-700 hover:bg-red-100">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.renderLedger = function() {
+      const ev = getActiveEvent();
+      const totalTarget = ev.goals.reduce((s, g) => s + Number(g.target), 0);
+      const totalRaised = ev.goals.reduce((s, g) => s + Number(g.raised), 0);
+      const pct = totalTarget > 0 ? ((totalRaised / totalTarget) * 100).toFixed(1) : "0.0";
+
+      document.getElementById('ledger-kpi-total').textContent = formatINR(totalRaised);
+      document.getElementById('ledger-kpi-target').textContent = formatINR(totalTarget);
+      document.getElementById('ledger-kpi-pct').textContent = `${pct}% Achieved`;
+      document.getElementById('ledger-kpi-count').textContent = ev.blessings.length;
+
+      // Top funded goal
+      const sortedGoals = [...ev.goals].sort((a, b) => b.raised - a.raised);
+      document.getElementById('ledger-kpi-top-goal').textContent = sortedGoals[0] ? sortedGoals[0].title : "—";
+
+      // Breakdown cards
+      document.getElementById('ledger-goal-breakdown').innerHTML = ev.goals.map(g => {
+        const gPct = g.target > 0 ? Math.min(100, ((g.raised / g.target) * 100)).toFixed(1) : 0;
+        return `
+          <div class="bg-ivory rounded-2xl p-4 border border-gold/40">
+            <div class="flex items-center justify-between text-sm font-bold text-maroon mb-1">
+              <span>${g.icon} ${g.title}</span>
+              <span class="text-emeraldProgress">${gPct}%</span>
+            </div>
+            <div class="w-full h-2 bg-white rounded-full overflow-hidden mb-2 border border-gold/30">
+              <div class="h-full bg-emeraldProgress" style="width: ${gPct}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-charcoal/70">
+              <span>${formatINR(g.raised)}</span>
+              <span>of ${formatINR(g.target)}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Populate goal filter dropdown
+      const filterSelect = document.getElementById('ledger-goal-filter');
+      const currentFilter = filterSelect.value;
+      filterSelect.innerHTML = `<option value="ALL">All Milestones</option>` +
+        ev.goals.map(g => `<option value="${g.id}">${g.title}</option>`).join('');
+      if ([...filterSelect.options].some(o => o.value === currentFilter)) {
+        filterSelect.value = currentFilter;
+      }
+
+      // Filter table rows
+      const query = (document.getElementById('ledger-search').value || "").toLowerCase();
+      const selectedGoal = filterSelect.value;
+
+      const filtered = ev.blessings.slice().reverse().filter(b => {
+        const matchesQuery = b.guest.toLowerCase().includes(query) || (b.message || "").toLowerCase().includes(query);
+        const matchesGoal = selectedGoal === "ALL" || b.goalId === selectedGoal;
+        return matchesQuery && matchesGoal;
+      });
+
+      const tbody = document.getElementById('ledger-table-body');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-sm text-charcoal/60">No matching Shagun entries found.</td></tr>`;
+      } else {
+        tbody.innerHTML = filtered.map(b => `
+          <tr class="hover:bg-ivory/70 transition">
+            <td class="py-3.5 px-4 font-bold text-charcoal">${b.guest}<span class="block text-[11px] font-normal text-charcoal/60">${b.relation}</span></td>
+            <td class="py-3.5 px-4 text-xs font-semibold text-maroon">${b.goalTitle}</td>
+            <td class="py-3.5 px-4 font-bold text-emeraldProgress">${formatINR(b.amount)}</td>
+            <td class="py-3.5 px-4 text-xs text-charcoal/80 max-w-xs truncate">${b.message || '—'}</td>
+            <td class="py-3.5 px-4 text-xs text-charcoal/60">${b.date}</td>
+            <td class="py-3.5 px-4 text-right">
+              <button onclick="sendWhatsAppThankYou('${b.guest.replace(/'/g, "\\'")}', ${b.amount}, '${b.goalTitle.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emeraldProgress border border-emerald-200 text-xs font-bold transition">
+                WhatsApp Thank You
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    };
+
+    // ==================== BUILDER ACTIONS ====================
+    window.saveBuilderDetails = function() {
+      const ev = getActiveEvent();
+      ev.occasion = document.getElementById('builder-occasion').value;
+      ev.hosts = document.getElementById('builder-hosts').value || "Celebration Hosts";
+      ev.date = document.getElementById('builder-date').value;
+      ev.city = document.getElementById('builder-city').value || "India";
+      ev.upiId = document.getElementById('builder-upi').value.trim() || "celebration@upi";
+      ev.note = document.getElementById('builder-note').value;
+      ev.brickMode = document.getElementById('builder-brick-toggle').checked;
+      persistEvent(ev);
+    };
+
+    window.openGoalModal = function(goalId = null) {
+      const ev = getActiveEvent();
+      const modal = document.getElementById('goal-editor-modal');
+      if (goalId) {
+        const g = ev.goals.find(item => item.id === goalId);
+        if (!g) return;
+        document.getElementById('goal-modal-heading').textContent = "Edit Milestone Goal";
+        document.getElementById('edit-goal-id').value = g.id;
+        document.getElementById('edit-goal-title').value = g.title;
+        document.getElementById('edit-goal-icon').value = g.icon;
+        document.getElementById('edit-goal-target').value = g.target;
+        document.getElementById('edit-goal-raised').value = g.raised;
+        document.getElementById('edit-goal-desc').value = g.desc || "";
+      } else {
+        document.getElementById('goal-modal-heading').textContent = "Add Future Milestone Goal";
+        document.getElementById('edit-goal-id').value = "";
+        document.getElementById('edit-goal-title').value = "";
+        document.getElementById('edit-goal-icon').value = "🏡";
+        document.getElementById('edit-goal-target').value = "";
+        document.getElementById('edit-goal-raised').value = "0";
+        document.getElementById('edit-goal-desc').value = "";
+      }
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    };
+
+    window.closeGoalModal = function() {
+      const modal = document.getElementById('goal-editor-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.saveGoalFromModal = function() {
+      const title = document.getElementById('edit-goal-title').value.trim();
+      const target = Number(document.getElementById('edit-goal-target').value);
+      const raised = Math.max(0, Number(document.getElementById('edit-goal-raised').value) || 0);
+      const icon = document.getElementById('edit-goal-icon').value;
+      const desc = document.getElementById('edit-goal-desc').value.trim();
+      const existingId = document.getElementById('edit-goal-id').value;
+
+      if (!title || target <= 0) {
+        showToast("Please enter a valid milestone title and target amount.");
+        return;
+      }
+
+      const ev = getActiveEvent();
+      if (existingId) {
+        const g = ev.goals.find(item => item.id === existingId);
+        if (g) {
+          g.title = title;
+          g.target = target;
+          g.raised = raised;
+          g.icon = icon;
+          g.desc = desc;
+        }
+      } else {
+        ev.goals.push({
+          id: "goal-" + Date.now(),
+          title,
+          target,
+          raised,
+          icon,
+          desc
+        });
+      }
+
+      persistEvent(ev);
+      closeGoalModal();
+      showToast("Milestone goal saved!");
+    };
+
+    window.deleteGoal = function(goalId) {
+      const ev = getActiveEvent();
+      if (ev.goals.length <= 1) {
+        showToast("You must keep at least one milestone goal on your page.");
+        return;
+      }
+      ev.goals = ev.goals.filter(g => g.id !== goalId);
+      persistEvent(ev);
+      showToast("Milestone removed.");
+    };
+
+    // ==================== GIFTING & DYNAMIC UPI FLOW ====================
+    window.openGiftModal = function(goalId) {
+      const ev = getActiveEvent();
+      const goal = ev.goals.find(g => g.id === goalId);
+      if (!goal) return;
+
+      activeGiftGoalId = goalId;
+      document.getElementById('gift-modal-goal-title').textContent = `${goal.icon} ${goal.title}`;
+      document.getElementById('gift-custom-amount').value = 2101;
+      document.getElementById('gift-guest-name').value = "";
+      document.getElementById('gift-guest-message').value = "";
+
+      selectGiftPreset(2101);
+      document.getElementById('gift-step-1').classList.remove('hidden');
+      document.getElementById('gift-step-2').classList.add('hidden');
+      document.getElementById('gift-step-3').classList.add('hidden');
+
+      const modal = document.getElementById('gift-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    };
+
+    window.closeGiftModal = function() {
+      const modal = document.getElementById('gift-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.selectGiftPreset = function(amt) {
+      document.getElementById('gift-custom-amount').value = amt;
+      document.querySelectorAll('.gift-preset-btn').forEach(btn => {
+        if (Number(btn.dataset.preset) === amt) {
+          btn.classList.add('border-2', 'border-maroon', 'bg-maroon-soft', 'text-maroon');
+          btn.classList.remove('border', 'border-gold/50', 'bg-white');
+        } else {
+          btn.classList.remove('border-2', 'border-maroon', 'bg-maroon-soft', 'text-maroon');
+          btn.classList.add('border', 'border-gold/50', 'bg-white');
+        }
+      });
+      updateGiftImpactPreview();
+    };
+
+    window.updateGiftImpactPreview = function() {
+      const ev = getActiveEvent();
+      const goal = ev.goals.find(g => g.id === activeGiftGoalId);
+      if (!goal) return;
+
+      const amt = Math.max(0, Number(document.getElementById('gift-custom-amount').value) || 0);
+      const currentPct = goal.target > 0 ? Math.min(100, (goal.raised / goal.target) * 100) : 0;
+      const addedPct = goal.target > 0 ? Math.min(100 - currentPct, (amt / goal.target) * 100) : 0;
+      const rawBoost = goal.target > 0 ? ((amt / goal.target) * 100).toFixed(2) : "0.00";
+
+      document.getElementById('gift-bar-current').style.width = `${currentPct}%`;
+      document.getElementById('gift-bar-added').style.width = `${addedPct}%`;
+      document.getElementById('gift-impact-badge').textContent = `+${rawBoost}% Boost`;
+      document.getElementById('gift-impact-sentence').innerHTML =
+        `Your <strong class="text-maroon">${formatINR(amt)}</strong> fills <strong>+${rawBoost}%</strong> of ${ev.hosts}'s <strong>${goal.title}</strong> goal!`;
+    };
+
+    window.goToUpiStep = function() {
+      const amt = Number(document.getElementById('gift-custom-amount').value);
+      const guestName = document.getElementById('gift-guest-name').value.trim();
+
+      if (!amt || amt < 1) {
+        showToast("Please enter a valid Shagun amount in ₹.");
+        return;
+      }
+      if (!guestName) {
+        showToast("Please enter your name so the hosts know who blessed them!");
+        return;
+      }
+
+      const ev = getActiveEvent();
+      const goal = ev.goals.find(g => g.id === activeGiftGoalId);
+      const upiUri = `upi://pay?pa=${encodeURIComponent(ev.upiId)}&pn=${encodeURIComponent(ev.hosts)}&am=${amt}&cu=INR&tn=${encodeURIComponent('UtsavFund: ' + goal.title)}`;
+
+      document.getElementById('upi-pay-amount-label').textContent = formatINR(amt);
+      document.getElementById('upi-id-display').textContent = ev.upiId;
+      document.getElementById('upi-deep-link-btn').href = upiUri;
+      document.getElementById('dynamic-upi-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=7A1C24&bgcolor=FFFFFF&data=${encodeURIComponent(upiUri)}`;
+
+      document.getElementById('gift-step-1').classList.add('hidden');
+      document.getElementById('gift-step-2').classList.remove('hidden');
+    };
+
+    window.backToGiftStep1 = function() {
+      document.getElementById('gift-step-2').classList.add('hidden');
+      document.getElementById('gift-step-1').classList.remove('hidden');
+    };
+
+    window.confirmUpiGiftSent = function() {
+      const ev = getActiveEvent();
+      const goal = ev.goals.find(g => g.id === activeGiftGoalId);
+      if (!goal) return;
+
+      const amt = Number(document.getElementById('gift-custom-amount').value);
+      const guestName = document.getElementById('gift-guest-name').value.trim();
+      const relation = document.getElementById('gift-guest-relation').value;
+      const message = document.getElementById('gift-guest-message').value.trim() || "Wishing you endless joy and prosperity!";
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      goal.raised = Number(goal.raised) + amt;
+      ev.blessings.push({
+        id: "b-" + Date.now(),
+        guest: guestName,
+        relation,
+        goalId: goal.id,
+        goalTitle: goal.title,
+        amount: amt,
+        message,
+        date: todayStr
+      });
+
+      persistEvent(ev);
+
+      // Populate Shareable Blessing Card
+      document.getElementById('badge-guest-name').textContent = guestName;
+      document.getElementById('badge-host-names').textContent = ev.hosts;
+      document.getElementById('badge-goal-name').textContent = `${goal.icon} ${goal.title}`;
+      document.getElementById('badge-amount').textContent = ev.brickMode
+        ? `${Math.max(1, Math.round(amt / 1000))} Brick(s) Gifted`
+        : `${formatINR(amt)} Shagun`;
+      document.getElementById('badge-quote').textContent = `"${message}"`;
+
+      document.getElementById('gift-step-2').classList.add('hidden');
+      document.getElementById('gift-step-3').classList.remove('hidden');
+
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 }, colors: ['#7A1C24', '#C59B27', '#15803D'] });
+      }
+    };
+
+    window.downloadBlessingBadge = function() {
+      const ev = getActiveEvent();
+      const guestName = document.getElementById('badge-guest-name').textContent;
+      const goalName = document.getElementById('badge-goal-name').textContent;
+      const amtText = document.getElementById('badge-amount').textContent;
+      const quote = document.getElementById('badge-quote').textContent;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 800;
+      const ctx = canvas.getContext('2d');
+
+      // Background gradient
+      const grad = ctx.createLinearGradient(0, 0, 800, 800);
+      grad.addColorStop(0, '#7A1C24');
+      grad.addColorStop(1, '#2B090C');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 800, 800);
+
+      // Gold border
+      ctx.strokeStyle = '#C59B27';
+      ctx.lineWidth = 14;
+      ctx.strokeRect(36, 36, 728, 728);
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#C59B27';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText('॥ शुभ आशीर्वाद • UTSAVFUND ॥', 400, 130);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 48px Georgia, serif';
+      ctx.fillText(guestName, 400, 240);
+
+      ctx.fillStyle = '#F3E5AB';
+      ctx.font = '26px sans-serif';
+      ctx.fillText(`just blessed ${ev.hosts}'s milestone`, 400, 295);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.fillRect(150, 350, 500, 150);
+      ctx.strokeStyle = '#C59B27';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(150, 350, 500, 150);
+
+      ctx.fillStyle = '#C59B27';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText(goalName, 400, 410);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 40px Georgia, serif';
+      ctx.fillText(amtText, 400, 468);
+
+      ctx.fillStyle = '#FAF8F5';
+      ctx.font = 'italic 24px Georgia, serif';
+      ctx.fillText(quote.slice(0, 52), 400, 590);
+
+      ctx.fillStyle = '#C59B27';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText('UtsavFund.in • Zero-Fee Celebration Registry', 400, 710);
+
+      const link = document.createElement('a');
+      link.download = `UtsavFund-Blessing-${guestName.replace(/\s+/g, '-')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast("Status card downloaded! Ready to share on WhatsApp/Instagram.");
+    };
+
+    // ==================== SHARING, CSV & UTILITIES ====================
+    window.copyEventLink = function() {
+      const ev = getActiveEvent();
+      const url = `https://utsavfund.in/${ev.id}`;
+      const tempInput = document.createElement('input');
+      tempInput.value = url;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showToast(`Copied link: ${url}`);
+    };
+
+    window.shareOnWhatsApp = function() {
+      const ev = getActiveEvent();
+      const msg = `Namaste! 🙏 Instead of traditional boxed gifts for ${ev.hosts}'s ${ev.occasion}, you can bless our future milestones directly here: https://utsavfund.in/${ev.id}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    window.sendWhatsAppThankYou = function(guestName, amount, goalTitle) {
+      const ev = getActiveEvent();
+      const msg = `Dear ${guestName}, thank you so much for your generous ${formatINR(amount)} Shagun toward our "${goalTitle}"! Your blessings mean the world to us. Warm regards, ${ev.hosts} 🙏❤️`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    window.exportShagunCSV = function() {
+      const ev = getActiveEvent();
+      const headers = ["Guest Name", "Relation", "Milestone", "Amount (INR)", "Blessing Message", "Date"];
+      const rows = ev.blessings.map(b => [
+        `"${b.guest}"`,
+        `"${b.relation}"`,
+        `"${b.goalTitle}"`,
+        b.amount,
+        `"${(b.message || '').replace(/"/g, '""')}"`,
+        b.date
+      ]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `${ev.id}-shagun-book.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Shagun Book CSV exported!");
+    };
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = "pointer-events-auto bg-maroon text-white px-4 py-3 rounded-2xl shadow-xl border border-gold text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all";
+      toast.innerHTML = `<span class="text-gold">✦</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    window.onload = function() {
+      initCloudSync();
+    };
+  </script>
+</body>
+</html>
